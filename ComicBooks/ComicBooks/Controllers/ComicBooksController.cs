@@ -1,8 +1,11 @@
-﻿using System;
+﻿using ComicBooks.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
 
 namespace ComicBookGallery.Controllers
 {
@@ -32,7 +35,7 @@ namespace ComicBookGallery.Controllers
             };
         }
 
-    
+
 
 
 
@@ -40,21 +43,41 @@ namespace ComicBookGallery.Controllers
 
         public ActionResult Detail()
         {
-            ViewBag.SerisTitle = "The amazing Spider-Man";
-            ViewBag.IssueNumber = 700;
-            ViewBag.Image = "";
-            ViewBag.Description = "<p>Final issue! Witness the final hours of Doctor Octopus' life and his one, last, great act of revenge! Even if Spider-Man survives... <strong>will Peter Parker?</strong></p>";
-            ViewBag.Artists = new string[]
-            {
-        "Script: Dan Slott",
-        "Pencils: Humberto Ramos",
-        "Inks: Victor Olazaba",
-        "Colors: Edgar Delgado",
-        "Letters: Chris Eliopoulos"
+            var comicBook = new ComicBook()
+            { //object initializer syntax 
+
+                
+                SerisTitle = "The amazing Spider-Man",
+                issueNumber = 700,
+                DescriptionHTML = "<p>Final issue! Witness the final hours of Doctor Octopus' life and his one, last, great act of revenge! Even if Spider-Man survives... <strong>will Peter Parker?</strong></p>",
+                artists = new Artists[]
+                {
+                 new Artists() { Name = "Dan Slott", Role="Script"},
+                 new Artists() { Name = "Humberto Ramos", Role = "Pencils" },
+                 new Artists() { Name = "Victor Olazaba", Role="Inks"},
+                 new Artists() { Name = "Edgar Delgado", Role = "Colors" },
+                 new Artists() { Name = "Chris Elipoulos", Role = "Letters" },
+                }
+
+
             };
+            
+           
 
+        //    ViewBag.SerisTitle = "The amazing Spider-Man";
+        //    ViewBag.IssueNumber = 700;
+        //    ViewBag.Image = "";
+        //    ViewBag.Description = "<p>Final issue! Witness the final hours of Doctor Octopus' life and his one, last, great act of revenge! Even if Spider-Man survives... <strong>will Peter Parker?</strong></p>";
+        //    ViewBag.Artists = new string[]
+        //    {
+        //"Inks: Victor Olazaba",
+        //"Colors: Edgar Delgado",
+        //"Letters: Chris Eliopoulos"
+        //    };
 
-            return View("Detail");
+            // UPdate view to be strongly typed MVC view associated with a type 
+            // Exposes model instance  with model property 
+            return View("Detail",comicBook);
         }
 
 

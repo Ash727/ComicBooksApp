@@ -1,23 +1,28 @@
-﻿@{
+﻿
+// Imports model into razor template 
+@model ComicBooks.Models.ComicBook
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Comic Book Detail";
+   
 
 }
 
 
-        <h1>@ViewBag.SerisTitle</h1>
-        <h2>Issue: @ViewBag.IssueNumber</h2>
+        <h1>@Model.SerisTitle</h1>
+        <h2>Issue: @Model.issueNumber</h2>
         <h5>Descrption:</h5>
-        <div>@Html.Raw(ViewBag.description)</div>
+        <div>@Html.Raw(Model.DescriptionHTML)</div>
 
-        @if (ViewBag.Artists.Length > 0)
+        @if (Model.artists.Length > 0)
         {
             <h5>Artist:</h5>
             <div>
                 <ul>
-                    @foreach (var artist in ViewBag.Artists)
+                    @foreach (var artist in Model.artists)
                     {
-                        <text>*@artist</text>
+                        //Name:*@artist.Name Role:*@artist.Role
+                        <li>@artist.Name : @artist.Role</li>
                     }
                 </ul>
             </div>
