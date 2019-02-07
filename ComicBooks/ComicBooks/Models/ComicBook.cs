@@ -13,8 +13,21 @@ namespace ComicBooks.Models
         public String DescriptionHTML { get; set; }
         public Artists [] artists { get; set; }
         public bool Favorite { get; set; }
+        public string DisplayText { get {
+                return SerisTitle + " #" + issueNumber;
+            } }
+        // for eventual json data string that comes in using marvel API 
+    
+        public string ImageLink { set; get; }
 
-        
+        // Seris-title- issunumeber.jpg commic image 
+        public string CoverImageFileName {
 
+            get {
+                return SerisTitle.Replace(" ", "-").ToLower() + "-" + issueNumber +".jpg";
+               
+            }
+            
+        }
     }
 }
