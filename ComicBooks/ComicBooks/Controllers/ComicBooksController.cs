@@ -6,6 +6,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using ComicBooks.data;
 
 namespace ComicBookGallery.Controllers
 {
@@ -14,7 +15,12 @@ namespace ComicBookGallery.Controllers
     // that is ComicBooks-> detail-> Detail For file structure 
     public class ComicBooksController : Controller
     {
-        
+        ComicRepository _comicbookRepo;
+        public ComicBooksController()
+        {
+            _comicbookRepo = new ComicRepository();
+
+        }
         public string index()
         {
             return "Hellow world";
@@ -27,7 +33,6 @@ namespace ComicBookGallery.Controllers
             if (DateTime.Today.DayOfWeek == DayOfWeek.Monday)
             {
                 return new RedirectResult("/");
-
             }
             return new ContentResult()
             {
@@ -40,27 +45,33 @@ namespace ComicBookGallery.Controllers
 
 
 
-
-        public ActionResult Detail()
+        //the paramter int is added to the last section of the url 
+        // the ? mark just makes it non nullable 
+        // commibBook/Detail/id
+        public ActionResult Detail(int? id)
         {
-            var comicBook = new ComicBook()
-            { //object initializer syntax 
-
-                
-                SerisTitle = "The amazing Spider-Man",
-                issueNumber = 700,
-                DescriptionHTML = "<p>Final issue! Witness the final hours of Doctor Octopus' life and his one, last, great act of revenge! Even if Spider-Man survives... <strong>will Peter Parker?</strong></p>",
-                artists = new Artists[]
-                {
-                 new Artists() { Name = "Dan Slott", Role="Script"},
-                 new Artists() { Name = "Humberto Ramos", Role = "Pencils" },
-                 new Artists() { Name = "Victor Olazaba", Role="Inks"},
-                 new Artists() { Name = "Edgar Delgado", Role = "Colors" },
-                 new Artists() { Name = "Chris Elipoulos", Role = "Letters" },
-                }
+            if (id == null) {
+                return HttpNotFound();
+            }
+            var comicBook = _comicbookRepo.GetCommicBook((int)id);
+           //var comicBook = new ComicBook()
+            //{ //object initializer syntax 
 
 
-            };
+            //    SerisTitle = "The amazing Spider-Man",
+            //    issueNumber = 700,
+            //    DescriptionHTML = "<p>Final issue! Witness the final hours of Doctor Octopus' life and his one, last, great act of revenge! Even if Spider-Man survives... <strong>will Peter Parker?</strong></p>",
+            //    artists = new Artists[]
+            //    {
+            //     new Artists() { Name = "Dan Slott", Role="Script"},
+            //     new Artists() { Name = "Humberto Ramos", Role = "Pencils" },
+            //     new Artists() { Name = "Victor Olazaba", Role="Inks"},
+            //     new Artists() { Name = "Edgar Delgado", Role = "Colors" },
+            //     new Artists() { Name = "Chris Elipoulos", Role = "Letters" },
+            //    }
+
+
+            //};
             
            
 

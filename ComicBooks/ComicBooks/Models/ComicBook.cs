@@ -8,13 +8,13 @@ namespace ComicBooks.Models
     public class ComicBook
     {
         public int Id { get; set; }
-        public string SerisTitle { get; set; }
+        public string SeriesTitle { get; set; }
         public int issueNumber { get; set; }
         public String DescriptionHTML { get; set; }
         public Artists [] artists { get; set; }
         public bool Favorite { get; set; }
         public string DisplayText { get {
-                return SerisTitle + " #" + issueNumber;
+                return SeriesTitle + " #" + issueNumber;
             } }
         // for eventual json data string that comes in using marvel API 
     
@@ -24,7 +24,7 @@ namespace ComicBooks.Models
         public string CoverImageFileName {
 
             get {
-                return SerisTitle.Replace(" ", "-").ToLower() + "-" + issueNumber +".jpg";
+                return SeriesTitle.Replace(" ", "-").ToLower() + "-" + issueNumber +".jpg";
                
             }
             
