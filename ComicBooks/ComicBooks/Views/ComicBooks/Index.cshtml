@@ -1,0 +1,19 @@
+﻿
+@model ComicBooks.Models.ComicBook[]
+@{
+    ViewBag.Title = "Comic Books";
+}
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    @foreach (var comic in Model)
+    {
+        <div class="col-md-3">
+            <h4>@comic.SeriesTitle</h4>
+            <img src="/Images/@comic.CoverImageFileName"
+                 alt="@comic.SeriesTitle #@comic.issueNumber"
+                 class="img-responsive" />
+        </div>
+    }
+</div>
+

@@ -21,10 +21,10 @@ namespace ComicBookGallery.Controllers
             _comicbookRepo = new ComicRepository();
 
         }
-        public string index()
-        {
-            return "Hellow world";
-        }
+        //public string index()
+        //{
+        //    return "Hellow world";
+        //}
 
 
         
@@ -42,7 +42,12 @@ namespace ComicBookGallery.Controllers
 
 
 
-
+        public ActionResult index()
+        { 
+            var comicBooks = _comicbookRepo.GetComicBooks();
+            // Not the at comicBooks si the model expected 
+            return View("index",comicBooks);
+        }
 
 
         //the paramter int is added to the last section of the url 
@@ -94,11 +99,11 @@ namespace ComicBookGallery.Controllers
 
     }
 
-    public class HomeController : Controller
-    {
-        public string index()
-        {
-            return "Hellow world";
-        }
-    }
+    //public class HomeController : Controller
+    //{
+    //    public string index()
+    //    {
+    //        return "Hellow world";
+    //    }
+    //}
 }
