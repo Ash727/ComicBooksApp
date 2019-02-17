@@ -45,6 +45,10 @@ namespace ComicBookGallery.Controllers
         public ActionResult index()
         { 
             var comicBooks = _comicbookRepo.GetComicBooks();
+            //Console.WriteLine("FUlly responsive ");
+           // System.Diagnostics.Debug.WriteLine("SomeText");
+           
+
             // Not the at comicBooks si the model expected 
             return View("index",comicBooks);
         }
