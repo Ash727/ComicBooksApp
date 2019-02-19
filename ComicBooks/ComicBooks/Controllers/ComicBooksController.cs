@@ -44,7 +44,7 @@ namespace ComicBookGallery.Controllers
 
         public ActionResult index()
         { 
-            var comicBooks = _comicbookRepo.GetComicBooks();
+            var comicBooks = _comicbookRepo.GetComicBooks2();
             //Console.WriteLine("FUlly responsive ");
            // System.Diagnostics.Debug.WriteLine("SomeText");
            

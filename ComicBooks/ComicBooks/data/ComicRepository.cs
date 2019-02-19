@@ -1,10 +1,14 @@
-﻿using System;
+﻿using System.Web.Security;
+    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ComicBookGallery.Controllers;
 using ComicBooks.Models;
 using System.Net;
+using Newtonsoft.Json;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace ComicBooks.data
 
@@ -14,6 +18,9 @@ namespace ComicBooks.data
 
 
 
+        private const string marvel_publicKey = "b075ca326169b3feb2a7c612c9fdd160";
+        private const string marvel_privateKey = "f2d4b191fe33fbb7a0b86aeb9240a40d31397bd9";
+        private string hashValue;
 
         private static ComicBook[] _comicBooks = new ComicBook[]
         {
@@ -71,6 +78,78 @@ namespace ComicBooks.data
             // Would need to load it from the API frist 
             return _comicBooks;
         }
+        public ComicBook[] GetComicBooks2()
+        {
+            
+            
+             long ticks =DateTime.Now.Ticks;
+            string timeStamp = DateTime.Now.Ticks.ToString();
+            string finalhash =calulateHash(timeStamp);
+            string uri = String.Format("https://gateway.marvel.com:443/v1/public/comics?title=iron%20man&ts={0}&apikey={1}&hash={2}", ticks, marvel_publicKey, finalhash);
+             
+            Random rand = new Random();
+            var offset = rand.Next(1400);
+
+            WebClient webClient = new WebClient();
+            webClient.Headers.Add("Ocp-Apim-Subscription-Key", marvel_publicKey);
+            //webClient.Headers.Add(HttpRequestHeader.Accept, "applicaiton/json");
+            //webClient.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+
+
+            var serializer = new JsonSerializer();
+
+            byte [] jsondata = webClient.DownloadData(uri);
+            string jsonData_string = Encoding.UTF8.GetString(jsondata);
+            marvelComics marevel_Comics=JsonConvert.DeserializeObject<marvelComics>(jsonData_string);
+            System.Diagnostics.Debug.WriteLine(marevel_Comics.data.results.Length.ToString());
+            System.Diagnostics.Debug.WriteLine(marevel_Comics.data.results[0].title.ToString());
+
+            // HttpRequest req = new HttpRequest(null, uri, null);
+
+            // Would need to load it from the API frist 
+            return _comicBooks;
+        }
+
+        private string calulateHash( string timeStamp) {
+
+
+            var toBehashed = timeStamp + marvel_privateKey + marvel_publicKey;
+           
+
+
+               string source = "Hello World!";
+            using (MD5 md5Hash = MD5.Create())
+            {
+                hashValue = GetMd5Hash(md5Hash, toBehashed);
+                
+            }
+
+            return hashValue;
+
+        }
+
+        static string GetMd5Hash(MD5 md5Hash, string input)
+        {
+
+            // Convert the input string to a byte array and compute the hash.
+            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+            // Create a new Stringbuilder to collect the bytes
+            // and create a string.
+            StringBuilder sBuilder = new StringBuilder();
+
+            // Loop through each byte of the hashed data 
+            // and format each one as a hexadecimal string.
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+
+            // Return the hexadecimal string.
+            return sBuilder.ToString();
+        }
+
+
 
         public ComicBook GetCommicBook(int id)
         {
