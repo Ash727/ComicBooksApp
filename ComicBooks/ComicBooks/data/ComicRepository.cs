@@ -24,53 +24,53 @@ namespace ComicBooks.data
 
         private static ComicBook[] _comicBooks = new ComicBook[]
         {
-             new ComicBook()
-            {
-                SeriesTitle = "The Amazing Spider-Man",
-                issueNumber = 700,
-                DescriptionHTML = "<p>Final issue! Witness the final hours of Doctor Octopus' life and his one, last, great act of revenge! Even if Spider-Man survives...<strong>will Peter Parker?</strong></p>",
-                artists = new Artists[]
-                {
-                    new Artists() { Name = "Dan Slott", Role = "Script" },
-                    new Artists() { Name = "Humberto Ramos", Role = "Pencils" },
-                    new Artists() { Name = "Victor Olazaba", Role = "Inks" },
-                    new Artists() { Name = "Edgar Delgado", Role = "Colors" },
-                    new Artists() { Name = "Chris Eliopoulos", Role = "Letters" },
-                },
-                Favorite = false,
-                Id = 1
-            },
-            new ComicBook()
-            {
-                SeriesTitle = "The Amazing Spider-Man",
-                issueNumber = 657,
-                DescriptionHTML = "<p><strong>FF: THREE TIE-IN.</strong> Spider-Man visits the FF for a very private wake--just for family.</p>",
-                artists = new Artists[]
-                {
-                    new Artists() { Name = "Dan Slott", Role = "Script" },
-                    new Artists() { Name = "Marcos Martin", Role = "Pencils" },
-                    new Artists() { Name = "Marcos Martin", Role = "Inks" },
-                    new Artists() { Name = "Muntsa Vicente", Role = "Colors" },
-                    new Artists() { Name = "Joe Caramagna", Role = "Letters" }
-                },
-                Favorite = false,
-                Id = 2
-            },
-            new ComicBook()
-            {
-                SeriesTitle = "Bone",
-                issueNumber = 50,
-                DescriptionHTML = "<p><strong>The Dungeon & The Parapet, Part 1.</strong> Thorn is discovered by Lord Tarsil and the corrupted Stickeaters and thrown into a dungeon with Fone Bone. As she sleeps, a message comes to her about the mysterious \"Crown of Horns\".</p>",
-                artists = new Artists[]
-                {
-                    new Artists() { Name = "Jeff Smith", Role = "Script" },
-                    new Artists() { Name = "Jeff Smith", Role = "Pencils" },
-                    new Artists() { Name = "Jeff Smith", Role = "Inks" },
-                    new Artists() { Name = "Jeff Smith", Role = "Letters" }
-                },
-                Favorite = false,
-                Id = 3
-            }
+            // new ComicBook()
+            //{
+            //    SeriesTitle = "The Amazing Spider-Man",
+            //    issueNumber = 700,
+            //    DescriptionHTML = "<p>Final issue! Witness the final hours of Doctor Octopus' life and his one, last, great act of revenge! Even if Spider-Man survives...<strong>will Peter Parker?</strong></p>",
+            //    artists = new Artists[]
+            //    {
+            //        new Artists() { Name = "Dan Slott", Role = "Script" },
+            //        new Artists() { Name = "Humberto Ramos", Role = "Pencils" },
+            //        new Artists() { Name = "Victor Olazaba", Role = "Inks" },
+            //        new Artists() { Name = "Edgar Delgado", Role = "Colors" },
+            //        new Artists() { Name = "Chris Eliopoulos", Role = "Letters" },
+            //    },
+            //    Favorite = false,
+            //    Id = 1
+            //},
+            //new ComicBook()
+            //{
+            //    SeriesTitle = "The Amazing Spider-Man",
+            //    issueNumber = 657,
+            //    DescriptionHTML = "<p><strong>FF: THREE TIE-IN.</strong> Spider-Man visits the FF for a very private wake--just for family.</p>",
+            //    artists = new Artists[]
+            //    {
+            //        new Artists() { Name = "Dan Slott", Role = "Script" },
+            //        new Artists() { Name = "Marcos Martin", Role = "Pencils" },
+            //        new Artists() { Name = "Marcos Martin", Role = "Inks" },
+            //        new Artists() { Name = "Muntsa Vicente", Role = "Colors" },
+            //        new Artists() { Name = "Joe Caramagna", Role = "Letters" }
+            //    },
+            //    Favorite = false,
+            //    Id = 2
+            //},
+            //new ComicBook()
+            //{
+            //    SeriesTitle = "Bone",
+            //    issueNumber = 50,
+            //    DescriptionHTML = "<p><strong>The Dungeon & The Parapet, Part 1.</strong> Thorn is discovered by Lord Tarsil and the corrupted Stickeaters and thrown into a dungeon with Fone Bone. As she sleeps, a message comes to her about the mysterious \"Crown of Horns\".</p>",
+            //    artists = new Artists[]
+            //    {
+            //        new Artists() { Name = "Jeff Smith", Role = "Script" },
+            //        new Artists() { Name = "Jeff Smith", Role = "Pencils" },
+            //        new Artists() { Name = "Jeff Smith", Role = "Inks" },
+            //        new Artists() { Name = "Jeff Smith", Role = "Letters" }
+            //    },
+            //    Favorite = false,
+            //    Id = 3
+            //}
         };
 
         // would need to be differnt for when getting info from Marvel's api 
@@ -122,19 +122,33 @@ namespace ComicBooks.data
                     issueNumber = int.Parse(marvel_comic.issueNumber),
                     DescriptionHTML = marvel_comic.description,
                     Favorite = false,
+                    
+                //    ImageLink = marvel_comic.images[0].path + marvel_comic.images[0].extension
 
 
 
 
                 };
                 //result_commic.artists = new Artists[marvel_comic.creators.items.Length];
+                if (marvel_comic.images.Length != 0 && marvel_comic.images != null)
+                {
+                    result_commic.ImageLink= getImages(marvel_comic.images);
 
+                    //if (marvel_comic.images[0] != null)
+                    //    result_commic.ImageLink = marvel_comic.images[0].path.ToString() + "." + marvel_comic.images[0].extension.ToString();
+                    //else if ()
+                }
+                // else 
+
+                
                 // enterintg artist  artist array 
                 List<Artists> A_List = new List<Artists>();
 
                 foreach (var m_artist in marvel_comic.creators.items)
                 {
                     A_List.Add(new Artists() { Name = m_artist.name, Role = m_artist.role });
+                    //ImageLink = marvel_comic.images[0].path + marvel_comic.images[0].extension
+
                 }
                 result_commic.artists = A_List.ToArray();
 
@@ -152,6 +166,16 @@ namespace ComicBooks.data
 
             // Would need to load it from the API frist 
             return _comicBooks;
+        }
+
+        private string getImages(marvelComics.Image [] images  ) {
+            string imagePath="";
+
+            for(int i=0; i<images.Length; i++)
+            if (images[i] != null)
+                imagePath = images[i].path.ToString() + "." + images[i].extension.ToString();
+          
+                return imagePath;
         }
 
         private string calulateHash(string timeStamp)

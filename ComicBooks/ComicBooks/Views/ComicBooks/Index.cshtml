@@ -20,10 +20,10 @@
 <div class="row">
     @foreach (var comic in Model)
     {
-        <div class="col-md-3">
-            <h4>@Html.ActionLink(comic.DisplayText, "Detail", new { id = comic.Id }) </h4>
+        <div class="col-md-4">
+            <h4>@Html.ActionLink(comic.SeriesTitle, "Detail", new { id = comic.Id }) </h4>
             <a href="@Url.Action("Detail", new { id = comic.Id})">
-                <img src="/Images/@comic.CoverImageFileName"
+                <img src="@comic.ImageLink"
                      alt="@comic.SeriesTitle #@comic.issueNumber"
                      class="img-responsive" />
             </a>
