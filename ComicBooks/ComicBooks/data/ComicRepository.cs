@@ -1,5 +1,5 @@
 ﻿using System.Web.Security;
-    using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -72,21 +72,22 @@ namespace ComicBooks.data
                 Id = 3
             }
         };
-        
+
         // would need to be differnt for when getting info from Marvel's api 
-        public ComicBook[] GetComicBooks() {
+        public ComicBook[] GetComicBooks()
+        {
             // Would need to load it from the API frist 
             return _comicBooks;
         }
         public ComicBook[] GetComicBooks2()
         {
-            
-            
-             long ticks =DateTime.Now.Ticks;
+
+
+            long ticks = DateTime.Now.Ticks;
             string timeStamp = DateTime.Now.Ticks.ToString();
-            string finalhash =calulateHash(timeStamp);
+            string finalhash = calulateHash(timeStamp);
             string uri = String.Format("https://gateway.marvel.com:443/v1/public/comics?title=iron%20man&ts={0}&apikey={1}&hash={2}", ticks, marvel_publicKey, finalhash);
-             
+
             Random rand = new Random();
             var offset = rand.Next(1400);
 
@@ -97,31 +98,75 @@ namespace ComicBooks.data
 
 
             var serializer = new JsonSerializer();
-
-            byte [] jsondata = webClient.DownloadData(uri);
+            // Download bytes of the url reuqest 
+            byte[] jsondata = webClient.DownloadData(uri);
+            //  transoform bytes  into jason string 
             string jsonData_string = Encoding.UTF8.GetString(jsondata);
-            marvelComics marevel_Comics=JsonConvert.DeserializeObject<marvelComics>(jsonData_string);
+            //demateralize json string 
+            marvelComics marevel_Comics = JsonConvert.DeserializeObject<marvelComics>(jsonData_string);
+            // Debug check results 
             System.Diagnostics.Debug.WriteLine(marevel_Comics.data.results.Length.ToString());
             System.Diagnostics.Debug.WriteLine(marevel_Comics.data.results[0].title.ToString());
 
+            // put search results in varible 
+            var marvelApiResults = marevel_Comics.data.results;
+            int count = 0;
+
+            foreach (marvelComics.Result marvel_comic in marvelApiResults)
+            {
+                // create commic book from comicbook class
+                ComicBook result_commic = new ComicBook()
+                {
+                    SeriesTitle = marvel_comic.title,
+                    Id = int.Parse(marvel_comic.id),
+                    issueNumber = int.Parse(marvel_comic.issueNumber),
+                    DescriptionHTML = marvel_comic.description,
+                    Favorite = false,
+
+
+
+
+                };
+                //result_commic.artists = new Artists[marvel_comic.creators.items.Length];
+
+                // enterintg artist  artist array 
+                List<Artists> A_List = new List<Artists>();
+
+                foreach (var m_artist in marvel_comic.creators.items)
+                {
+                    A_List.Add(new Artists() { Name = m_artist.name, Role = m_artist.role });
+                }
+                result_commic.artists = A_List.ToArray();
+
+
+
+                //  adding to array
+                //_comicBooks[_comicBooks.Length + 1] = result_commic;
+                List<ComicBook> comic_list = _comicBooks.ToList<ComicBook>();
+                comic_list.Add(result_commic);
+                _comicBooks = new ComicBook[comic_list.Count];
+                _comicBooks = comic_list.ToArray();
+
+            }
             // HttpRequest req = new HttpRequest(null, uri, null);
 
             // Would need to load it from the API frist 
             return _comicBooks;
         }
 
-        private string calulateHash( string timeStamp) {
+        private string calulateHash(string timeStamp)
+        {
 
 
             var toBehashed = timeStamp + marvel_privateKey + marvel_publicKey;
-           
 
 
-               string source = "Hello World!";
+
+            string source = "Hello World!";
             using (MD5 md5Hash = MD5.Create())
             {
                 hashValue = GetMd5Hash(md5Hash, toBehashed);
-                
+
             }
 
             return hashValue;
