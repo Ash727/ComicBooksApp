@@ -1,32 +1,34 @@
 ﻿
 @model ComicBooks.Models.ComicBook[]
 @{
-    ViewBag.Title = "Comic Books";
+    ViewBag.Title = "Comic Search";
 }
-<h2>@ViewBag.Title</h2>
 
-<div class="row">
+<div class="row px-4 py-4">
     <div class="col">
+        <h2 class="text-secondary mt-4">@ViewBag.Title</h2>
         <form action="/" method="post">
             <div class="SearchBar">
                 <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                <button type="submit" class="btn btn-outline-primary">Search</button>
+                <button type="submit" class="btn btn-outline-secondary">Search</button>
             </div>
         </form>
     </div>
 </div>
 
+<h2 class="titleLink">Latest Editions</h2>
 
-<div class="row">
+<div class="row align-items-start">
+
     @foreach (var comic in Model)
     {
-        <div class="col-md-4">
-            <h4>@Html.ActionLink(comic.SeriesTitle, "Detail", new { id = comic.Id }) </h4>
+        <div class="  col-md-6 col-lg-3 bg-transparent">
+            <h4>@Html.ActionLink(comic.SeriesTitle, "Detail", new { id = comic.Id }, new { @class = "titleLink" }) </h4>
             <a href="@Url.Action("Detail", new { id = comic.Id})">
                 <img src="@comic.ImageLink"
-                     alt="@comic.SeriesTitle #@comic.issueNumber"
-                     class="img-responsive" />
+                     class=" img-fluid rounded" alt="Responsive image Card image" />
             </a>
+
         </div>
     }
 </div>

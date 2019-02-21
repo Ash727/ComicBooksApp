@@ -1,6 +1,14 @@
-﻿body {
+﻿
+body {
     padding-top: 50px;
     padding-bottom: 20px;
+
+}
+/*Test link css */
+.titleLink {
+ text-decoration:none;
+ color:white;
+ 
 }
 /* SearchBar to create flex layout*/
 .SearchBar {

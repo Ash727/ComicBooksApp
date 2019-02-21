@@ -21,6 +21,8 @@ namespace ComicBooks.data
         private const string marvel_publicKey = "b075ca326169b3feb2a7c612c9fdd160";
         private const string marvel_privateKey = "f2d4b191fe33fbb7a0b86aeb9240a40d31397bd9";
         private string hashValue;
+        // declare list of comics to display 
+        List<ComicBook> comic_list = new List<ComicBook>();
 
         private static ComicBook[] _comicBooks = new ComicBook[]
         {
@@ -86,7 +88,8 @@ namespace ComicBooks.data
             long ticks = DateTime.Now.Ticks;
             string timeStamp = DateTime.Now.Ticks.ToString();
             string finalhash = calulateHash(timeStamp);
-            string uri = String.Format("https://gateway.marvel.com:443/v1/public/comics?title=iron%20man&ts={0}&apikey={1}&hash={2}", ticks, marvel_publicKey, finalhash);
+        
+            string uri = String.Format("https://gateway.marvel.com:443/v1/public/comics?format=comic&hasDigitalIssue=true&orderBy=-focDate&limit=12&ts={0}&apikey={1}&hash={2}", ticks, marvel_publicKey, finalhash);
 
             Random rand = new Random();
             var offset = rand.Next(1400);
@@ -112,6 +115,8 @@ namespace ComicBooks.data
             var marvelApiResults = marevel_Comics.data.results;
             int count = 0;
 
+            // For refresh we clear out reintialize comic books array 
+            _comicBooks = new ComicBook[comic_list.Count];
             foreach (marvelComics.Result marvel_comic in marvelApiResults)
             {
                 // create commic book from comicbook class
@@ -129,15 +134,17 @@ namespace ComicBooks.data
 
 
                 };
+
+                
                 //result_commic.artists = new Artists[marvel_comic.creators.items.Length];
-                if (marvel_comic.images.Length != 0 && marvel_comic.images != null)
+                // Only show commic or add to list if we have image 
+                if (marvel_comic.images.Length != 0 && marvel_comic.images != null) 
                 {
                     result_commic.ImageLink= getImages(marvel_comic.images);
 
                     //if (marvel_comic.images[0] != null)
                     //    result_commic.ImageLink = marvel_comic.images[0].path.ToString() + "." + marvel_comic.images[0].extension.ToString();
                     //else if ()
-                }
                 // else 
 
                 
@@ -154,15 +161,18 @@ namespace ComicBooks.data
 
 
 
-                //  adding to array
+                //  adding to array of comics to show  
                 //_comicBooks[_comicBooks.Length + 1] = result_commic;
-                List<ComicBook> comic_list = _comicBooks.ToList<ComicBook>();
+                comic_list = _comicBooks.ToList<ComicBook>();
                 comic_list.Add(result_commic);
                 _comicBooks = new ComicBook[comic_list.Count];
                 _comicBooks = comic_list.ToArray();
+                }
 
             }
             // HttpRequest req = new HttpRequest(null, uri, null);
+
+            comic_list = _comicBooks.ToList<ComicBook>();
 
             // Would need to load it from the API frist 
             return _comicBooks;

@@ -1,4 +1,4 @@
-﻿// Imports model into razor template
+﻿@*// Imports model into razor template*@
 @model ComicBooks.Models.ComicBook
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,9 +8,9 @@
 
 }
 
-<h2>@Model.DisplayText </h2>
+<h2 class="text-info">@Model.DisplayText </h2>
 
-<div class="row">
+<div class="row text-white">
     <div class="col-md-6">
         <div class="well">
             <h5><label>Series Title:</label> @Model.SeriesTitle</h5>
@@ -36,7 +36,7 @@
             }
         </div>
     <h5>Description</h5>
-    <p>@Html.Raw(Model.DescriptionHTML)</p>
+    <p class="text-white">@Html.Raw(Model.DescriptionHTML)</p>
     
     </div>
 
