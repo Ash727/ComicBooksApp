@@ -53,6 +53,21 @@ namespace ComicBookGallery.Controllers
             return View("index",comicBooks);
         }
 
+        [HttpPost]
+        public ActionResult index( string Search)
+        {
+            var comicBooks = _comicbookRepo.GetComicSearch(Search);
+            //Console.WriteLine("FUlly responsive ");
+            // System.Diagnostics.Debug.WriteLine("SomeText");
+
+            System.Diagnostics.Debug.WriteLine("This is your search"+Search);
+
+            // Not the at comicBooks si the model expected 
+            return View(comicBooks);
+        }
+
+
+
 
         //the paramter int is added to the last section of the url 
         // the ? mark just makes it non nullable 

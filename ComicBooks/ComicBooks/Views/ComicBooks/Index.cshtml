@@ -1,35 +1,37 @@
 ﻿
 @model ComicBooks.Models.ComicBook[]
 @{
-    ViewBag.Title = "Comic Search";
+    ViewBag.Title = "Superhero Comic Search";
 }
 
 <div class="row px-4 py-4">
     <div class="col">
-        <h2 class="text-secondary mt-4">@ViewBag.Title</h2>
+        <h2 class="text-secondary font-weight-bold mt-1 ">@ViewBag.Title</h2>
         <form action="/" method="post">
             <div class="SearchBar">
-                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                <input name="Search" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
                 <button type="submit" class="btn btn-outline-secondary">Search</button>
             </div>
         </form>
     </div>
 </div>
 
-<h2 class="titleLink">Latest Editions</h2>
+<h2 class="titleLink mb-4">Latest Editions</h2>
 
-<div class="row align-items-start">
+@if (Model !=null )
+{
+    <div class="row align-items-start">
+        @foreach (var comic in Model)
+        {
+            <div class="  col-md-6 col-lg-3 bg-transparent ">
+                <h3>@Html.ActionLink(comic.SeriesTitle, "Detail", new { id = comic.Id }, new { @class = "titleLink" }) </h3>
+                <a href="@Url.Action("Detail", new { id = comic.Id})">
+                    <img src="@comic.ImageLink"
+                         class=" img-fluid rounded" alt="Responsive image Card image" />
+                </a>
 
-    @foreach (var comic in Model)
-    {
-        <div class="  col-md-6 col-lg-3 bg-transparent">
-            <h4>@Html.ActionLink(comic.SeriesTitle, "Detail", new { id = comic.Id }, new { @class = "titleLink" }) </h4>
-            <a href="@Url.Action("Detail", new { id = comic.Id})">
-                <img src="@comic.ImageLink"
-                     class=" img-fluid rounded" alt="Responsive image Card image" />
-            </a>
-
-        </div>
-    }
-</div>
+            </div>
+        }
+    </div>
+}
 

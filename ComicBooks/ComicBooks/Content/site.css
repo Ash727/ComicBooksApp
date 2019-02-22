@@ -1,8 +1,21 @@
 ﻿
+
 body {
     padding-top: 50px;
     padding-bottom: 20px;
 
+}
+
+footer {
+
+height: 3em;
+}
+.footer-text {
+    text-align: center;
+}
+
+.navBar-inner {
+    background-color: rgba(237, 29, 36,0.84);
 }
 /*Test link css */
 .titleLink {
@@ -10,6 +23,9 @@ body {
  color:white;
  
 }
+    .titleLink:hover {
+        text-decoration: none;
+    }
 /* SearchBar to create flex layout*/
 .SearchBar {
     display: flex;

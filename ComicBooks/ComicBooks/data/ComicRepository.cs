@@ -21,6 +21,7 @@ namespace ComicBooks.data
         private const string marvel_publicKey = "b075ca326169b3feb2a7c612c9fdd160";
         private const string marvel_privateKey = "f2d4b191fe33fbb7a0b86aeb9240a40d31397bd9";
         private string hashValue;
+        private long ticks;
         // declare list of comics to display 
         List<ComicBook> comic_list = new List<ComicBook>();
 
@@ -83,13 +84,34 @@ namespace ComicBooks.data
         }
         public ComicBook[] GetComicBooks2()
         {
+            // Prepare URI For the API Call as requested in marevel API documentation
+            prepareUri();
+            string uri = String.Format("https://gateway.marvel.com:443/v1/public/comics?format=comic&hasDigitalIssue=true&orderBy=-focDate&limit=12&ts={0}&apikey={1}&hash={2}", ticks, marvel_publicKey, hashValue);
+            //APi call retriving comics 
+            doAPICall(uri);
+            // Make the API Call
+            // Would need to load it from the API frist 
+            return _comicBooks;
+        }
 
+        public ComicBook[] GetComicSearch(string Search)
+        {
+            // prepare the uri 
+            // _comicBooks = new ComicBook[comic_list.Count];
+            prepareUri();
+            string uri = String.Format("https://gateway.marvel.com:443/v1/public/comics?title={0}&titleStartsWith={0}&format=comic&hasDigitalIssue=true&orderBy=-focDate&limit=9&ts={1}&apikey={2}&hash={3}",Search, ticks, marvel_publicKey, hashValue);
+            doAPICall(uri);
+            return _comicBooks;
+        }
 
-            long ticks = DateTime.Now.Ticks;
+        private void prepareUri ()
+        {
+            ticks = DateTime.Now.Ticks;
             string timeStamp = DateTime.Now.Ticks.ToString();
-            string finalhash = calulateHash(timeStamp);
-        
-            string uri = String.Format("https://gateway.marvel.com:443/v1/public/comics?format=comic&hasDigitalIssue=true&orderBy=-focDate&limit=12&ts={0}&apikey={1}&hash={2}", ticks, marvel_publicKey, finalhash);
+            calulateHash(timeStamp);
+
+        }
+        private ComicBook[] doAPICall(string uri) {
 
             Random rand = new Random();
             var offset = rand.Next(1400);
@@ -109,7 +131,7 @@ namespace ComicBooks.data
             marvelComics marevel_Comics = JsonConvert.DeserializeObject<marvelComics>(jsonData_string);
             // Debug check results 
             System.Diagnostics.Debug.WriteLine(marevel_Comics.data.results.Length.ToString());
-            System.Diagnostics.Debug.WriteLine(marevel_Comics.data.results[0].title.ToString());
+          //  System.Diagnostics.Debug.WriteLine(marevel_Comics.data.results[0].title.ToString());
 
             // put search results in varible 
             var marvelApiResults = marevel_Comics.data.results;
@@ -117,14 +139,24 @@ namespace ComicBooks.data
 
             // For refresh we clear out reintialize comic books array 
             _comicBooks = new ComicBook[comic_list.Count];
+
+            
+            // List<marvelComics.Result>marvelApiResults2= marvelApiResults.ToList<marvelComics.Result>();
+            //marvelApiResults2.BinarySearch()
+            //marvelApiResults2.ForEach(marvel_comic => {
+
+
+            //});
+
             foreach (marvelComics.Result marvel_comic in marvelApiResults)
             {
+                int comicIss = 0;
                 // create commic book from comicbook class
                 ComicBook result_commic = new ComicBook()
                 {
                     SeriesTitle = marvel_comic.title,
-                    Id = int.Parse(marvel_comic.id),
-                    issueNumber = int.Parse(marvel_comic.issueNumber),
+                    Id = Int32.Parse(marvel_comic.id),
+                    issueNumber = (marvel_comic.issueNumber),
                     DescriptionHTML = marvel_comic.description,
                     Favorite = false,
                     
@@ -174,9 +206,14 @@ namespace ComicBooks.data
 
             comic_list = _comicBooks.ToList<ComicBook>();
 
-            // Would need to load it from the API frist 
+
+
+
             return _comicBooks;
         }
+
+
+      
 
         private string getImages(marvelComics.Image [] images  ) {
             string imagePath="";

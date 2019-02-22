@@ -10,9 +10,9 @@
     @* <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />*@
     @*<script src="~/Scripts/modernizr-2.6.2.js"></script>*@
 </head>
-<body class=" bg-dark">
+<body class="bg-dark ">
 
-    <nav class=" px-3 navbar navbar-expand-lg navbar-light bg-danger fixed-top">
+    <nav class="navBar-inner  navbar navbar-expand-lg navbar-light  fixed-top">
         <a class="navbar-brand text-light" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -55,25 +55,25 @@
     @if (ViewBag.ShowBackBar != null && ViewBag.ShowBackBar)
     {
         <div class="backbar">
-            <div class="container">
+            <div class="container ">
                 @Html.ActionLink("Return to List", "Index", null, new { @class = "btn btn-defualt" })
             </div>
         </div>
     }
 
-    <div class="container body-content">
+    <div class="container body-content well ">
 
         @RenderBody()
-        <hr />
-        <footer class="bg-danger text-white">
-            <p>&copy; @DateTime.Now.Year - Comic Book Gallery</p>
-        </footer>
     </div>
-
+        <hr />
+        <footer class=" navBar-inner text-white fixed-bottom  ">
+            <p class="footer-text">&copy; @DateTime.Now.Year - Comic Book Gallery</p>
+        </footer>
     @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
         <script src="~/Scripts/bootstrap.min.js"></script>*@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
+
 </html>
