@@ -9,7 +9,7 @@
 <div class="row px-4 py-4">
     <div class="col">
         <h2 class="text-secondary font-weight-bold mt-1 ">@ViewBag.Title</h2>
-        <form action="@Url.Action("Search")" method="GET">
+        <form action=@Url.Action("Search") method="GET">
             <div class="SearchBar">
                 <input name="Search" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
                 <button type="submit" class="btn btn-outline-secondary">Search</button>

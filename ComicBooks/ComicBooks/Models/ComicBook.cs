@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static ComicBooks.data.marvelComics;
 
 namespace ComicBooks.Models
 {
@@ -12,6 +13,8 @@ namespace ComicBooks.Models
         public string issueNumber { get; set; }
         public String DescriptionHTML { get; set; }
         public Artists [] artists { get; set; }
+        // Character information from marvelComics
+        public Item1[] characters { get; set; }
         public bool Favorite { get; set; }
         public string DisplayText { get {
                 return SeriesTitle + " #" + issueNumber;

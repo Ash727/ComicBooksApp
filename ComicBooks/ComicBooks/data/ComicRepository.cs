@@ -22,6 +22,7 @@ namespace ComicBooks.data
         private const string marvel_privateKey = "f2d4b191fe33fbb7a0b86aeb9240a40d31397bd9";
         private string hashValue;
         private long ticks;
+        private string the_search;
         // declare list of comics to display 
         List<ComicBook> comic_list = new List<ComicBook>();
 
@@ -98,8 +99,9 @@ namespace ComicBooks.data
         {
             // prepare the uri 
             // _comicBooks = new ComicBook[comic_list.Count];
+            the_search = Search;
             prepareUri();
-            string uri = String.Format("https://gateway.marvel.com:443/v1/public/comics?title={0}&titleStartsWith={0}&format=comic&hasDigitalIssue=true&orderBy=-focDate&limit=9&ts={1}&apikey={2}&hash={3}",Search, ticks, marvel_publicKey, hashValue);
+            string uri = String.Format("https://gateway.marvel.com:443/v1/public/comics?title={0}&titleStartsWith={0}&format=comic&hasDigitalIssue=true&orderBy=-focDate&limit=24&ts={1}&apikey={2}&hash={3}",the_search, ticks, marvel_publicKey, hashValue);
             doAPICall(uri);
             return _comicBooks;
         }
@@ -121,58 +123,49 @@ namespace ComicBooks.data
             //webClient.Headers.Add(HttpRequestHeader.Accept, "applicaiton/json");
             //webClient.Headers.Add(HttpRequestHeader.ContentType, "application/json");
 
+            try
+            {
 
-            var serializer = new JsonSerializer();
-            // Download bytes of the url reuqest 
-            byte[] jsondata = webClient.DownloadData(uri);
-            //  transoform bytes  into jason string 
-            string jsonData_string = Encoding.UTF8.GetString(jsondata);
-            //demateralize json string 
-            marvelComics marevel_Comics = JsonConvert.DeserializeObject<marvelComics>(jsonData_string);
-            // Debug check results 
-            System.Diagnostics.Debug.WriteLine(marevel_Comics.data.results.Length.ToString());
-          //  System.Diagnostics.Debug.WriteLine(marevel_Comics.data.results[0].title.ToString());
+                var serializer = new JsonSerializer();
+                // Download bytes of the url reuqest 
+                byte[] jsondata = webClient.DownloadData(uri);
+                //  transoform bytes  into jason string 
+                string jsonData_string = Encoding.UTF8.GetString(jsondata);
+                //demateralize json string 
+                marvelComics marevel_Comics = JsonConvert.DeserializeObject<marvelComics>(jsonData_string);
+                // Debug check results 
+                System.Diagnostics.Debug.WriteLine(marevel_Comics.data.results.Length.ToString());
+                //  System.Diagnostics.Debug.WriteLine(marevel_Comics.data.results[0].title.ToString());
 
-            // put search results in varible 
-            var marvelApiResults = marevel_Comics.data.results;
-            int count = 0;
+                // put search results in varible 
 
-            // For refresh we clear out reintialize comic books array 
-            _comicBooks = new ComicBook[comic_list.Count];
-
-            
-            // List<marvelComics.Result>marvelApiResults2= marvelApiResults.ToList<marvelComics.Result>();
-            //marvelApiResults2.BinarySearch()
-            //marvelApiResults2.ForEach(marvel_comic => {
-
-
-            //});
-
+                var marvelApiResults = marevel_Comics.data.results;
+            _comicBooks = new ComicBook[comic_list.Count]; 
             foreach (marvelComics.Result marvel_comic in marvelApiResults)
             {
                 int comicIss = 0;
-                // create commic book from comicbook class
-                ComicBook result_commic = new ComicBook()
-                {
-                    SeriesTitle = marvel_comic.title,
-                    Id = Int32.Parse(marvel_comic.id),
-                    issueNumber = (marvel_comic.issueNumber),
-                    DescriptionHTML = marvel_comic.description,
-                    Favorite = false,
-                    
-                //    ImageLink = marvel_comic.images[0].path + marvel_comic.images[0].extension
-
-
-
-
-                };
+                
 
                 
                 //result_commic.artists = new Artists[marvel_comic.creators.items.Length];
                 // Only show commic or add to list if we have image 
                 if (marvel_comic.images.Length != 0 && marvel_comic.images != null) 
                 {
-                    result_commic.ImageLink= getImages(marvel_comic.images);
+                        // create commic book from comicbook class
+                        ComicBook result_commic = new ComicBook()
+                        {
+                            SeriesTitle = marvel_comic.title,
+                            Id = Int32.Parse(marvel_comic.id),
+                            issueNumber = (marvel_comic.issueNumber),
+                            DescriptionHTML = marvel_comic.description,
+                            Favorite = false,
+                            characters = marvel_comic.characters.items
+
+                            //    ImageLink = marvel_comic.images[0].path + marvel_comic.images[0].extension
+
+                        };
+
+                        result_commic.ImageLink= getImages(marvel_comic.images);
 
                     //if (marvel_comic.images[0] != null)
                     //    result_commic.ImageLink = marvel_comic.images[0].path.ToString() + "." + marvel_comic.images[0].extension.ToString();
@@ -186,28 +179,40 @@ namespace ComicBooks.data
                 foreach (var m_artist in marvel_comic.creators.items)
                 {
                     A_List.Add(new Artists() { Name = m_artist.name, Role = m_artist.role });
+                         
                     //ImageLink = marvel_comic.images[0].path + marvel_comic.images[0].extension
 
                 }
                 result_commic.artists = A_List.ToArray();
-
-
-
                 //  adding to array of comics to show  
                 //_comicBooks[_comicBooks.Length + 1] = result_commic;
-                comic_list = _comicBooks.ToList<ComicBook>();
+                //comic_list = _comicBooks.ToList<ComicBook>();
                 comic_list.Add(result_commic);
-                _comicBooks = new ComicBook[comic_list.Count];
-                _comicBooks = comic_list.ToArray();
                 }
 
             }
+            }
+            catch (Exception e){
+                _comicBooks = null;
+                return _comicBooks;
+            }
+            int count = 0;
+            // For refresh we clear out reintialize comic books array 
+            // List<marvelComics.Result>marvelApiResults2= marvelApiResults.ToList<marvelComics.Result>();
+            //marvelApiResults2.BinarySearch()
+            //marvelApiResults2.ForEach(marvel_comic => {
+
+
+            //});
+
             // HttpRequest req = new HttpRequest(null, uri, null);
 
-            comic_list = _comicBooks.ToList<ComicBook>();
+                _comicBooks = new ComicBook[comic_list.Count];
+                _comicBooks = comic_list.ToArray();
+               comic_list = _comicBooks.ToList<ComicBook>();
 
-
-
+            
+            
 
             return _comicBooks;
         }
@@ -267,11 +272,15 @@ namespace ComicBooks.data
 
 
 
-        public ComicBook GetCommicBook(int id)
+        public ComicBook GetCommicBook(int? id)
         {
+            List<ComicBook> c= comic_list;
+            ComicBook[] a = _comicBooks;
+            
+            
+                ComicBook comicBook = _comicBooks.First(e => e.Id == id);
 
-
-            ComicBook comicBook = _comicBooks.First(e => e.Id == id);
+            
             return comicBook;
 
             //var comicBook = null;

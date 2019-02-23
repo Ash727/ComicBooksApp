@@ -8,14 +8,14 @@
 
 }
 
-<h2 class="text-info">@Model.DisplayText </h2>
+<h2 class="text-info mt-3 mb-2">@Model.SeriesTitle </h2>
 
-<div class="row text-white">
-    <div class="col-md-6">
+<div class="row text-white ">
+    <div class="col-md-6 mt-1">
         <div class="well">
-            <h5><label>Series Title:</label> @Model.SeriesTitle</h5>
+            @*<h5><label>Series Title:</label> @Model.SeriesTitle</h5>*@
             <h5><label>Issue #:</label> @Model.issueNumber</h5>
-            <h5><label>Favorite:</label> @(Model.Favorite?"Yes": "No")</h5>
+            <h5><label>Favorite:</label> @(Model.Favorite ? "Yes" : "No")</h5>
             @if (Model.artists.Length > 0)
             {
                 <h5>Artist:</h5>
@@ -34,14 +34,34 @@
             {
                 <text>No artist to display</text>
             }
+
+                <h5>Characters:</h5>
+            @if (Model.characters.Length > 0)
+            {
+                <div>
+                    <ul>
+                        @foreach (var character in Model.characters)
+                        {
+                            //Name:*@artist.Name Role:*@artist.Role
+                        <li>@character.name</li>
+                        }
+                    </ul>
+                </div>
+
+            }
+            else
+                {
+                    <text>No Characters to display</text>
+                }
+            
         </div>
-    <h5>Description</h5>
-    <p class="text-white">@Html.Raw(Model.DescriptionHTML)</p>
-    
+        <h5>Description</h5>
+        <p class="text-white">@Html.Raw(Model.DescriptionHTML)</p>
+
     </div>
 
-    <div class="col-md-6">
-        <img src="@Model.ImageLink" 
+    <div class="col-md-6 MT-2">
+        <img src="@Model.ImageLink"
              alt="@Model.SeriesTitle @Model.issueNumber" class="img-responsive" />
     </div>
 </div>

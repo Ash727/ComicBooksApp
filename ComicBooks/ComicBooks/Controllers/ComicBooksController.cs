@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using ComicBooks.data;
+using System.Web.UI;
 
 namespace ComicBookGallery.Controllers
 {
@@ -41,7 +42,8 @@ namespace ComicBookGallery.Controllers
         }
 
 
-
+        [HttpGet]
+        [OutputCacheAttribute(VaryByParam = "*", Duration = 0, NoStore = true)] // will be applied to all actions in MyController, unless those actions override with their own decoration
         public ActionResult index()
         { 
             var comicBooks = _comicbookRepo.GetComicBooks2();
@@ -53,17 +55,30 @@ namespace ComicBookGallery.Controllers
             return View("index",comicBooks);
         }
 
-        [HttpPost]
-        public ActionResult index( string Search)
+        // get request with already linked string 
+
+
+        [HttpGet]
+        [OutputCacheAttribute(VaryByParam = "*", Duration = 0, NoStore = true)] // will be applied to all actions in MyController, unless those actions override with their own decoration
+        public ActionResult Search(string Search)
         {
+            Response.Cache.SetNoStore();
+            Response.Cache.AppendCacheExtension("no-cache");
+;
+            
+
+            if (Search == null) {
+                return HttpNotFound("These are not the drones your looking for ");
+            }
             var comicBooks = _comicbookRepo.GetComicSearch(Search);
             //Console.WriteLine("FUlly responsive ");
             // System.Diagnostics.Debug.WriteLine("SomeText");
 
             System.Diagnostics.Debug.WriteLine("This is your search"+Search);
 
+            ViewBag.Search = Search;
             // Not the at comicBooks si the model expected 
-            return View(comicBooks);
+            return View("Search",comicBooks);
         }
 
 
