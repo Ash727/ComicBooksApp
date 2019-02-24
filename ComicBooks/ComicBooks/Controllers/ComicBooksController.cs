@@ -1,4 +1,4 @@
-﻿using ComicBooks.Models;
+using ComicBooks.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,11 +62,6 @@ namespace ComicBookGallery.Controllers
         [OutputCacheAttribute(VaryByParam = "*", Duration = 0, NoStore = true)] // will be applied to all actions in MyController, unless those actions override with their own decoration
         public ActionResult Search(string Search)
         {
-            Response.Cache.SetNoStore();
-            Response.Cache.AppendCacheExtension("no-cache");
-;
-            
-
             if (Search == null) {
                 return HttpNotFound("These are not the drones your looking for ");
             }
